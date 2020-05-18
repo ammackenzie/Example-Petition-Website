@@ -1,0 +1,136 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model Final_Coursework___40091970.Models.Member
+
+
+
+<body class="causeBody">
+
+    @* background image *@
+    <div class="backgroundImg">
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-8 mx-auto text-center mtNeg">
+                <div class="causeHeader">
+                    <p>What would you like to start a cause about?</p>
+                </div>
+            </div>
+        </div>
+        @* end of row *@
+        <div class="row">
+            <div class="col-xs-8 mx-auto text-center">
+                <div class="largerText causeText">
+                    <p>PetitionPlus offers a platform that goes beyond the everyday petition, we support causes that can change the world!</p>
+                </div>
+            </div>
+        </div>
+        @* end of row *@
+
+        <div class="row no-gutters">
+            <div class="col-2 mx-auto buttonDiv roundedTop">
+                <div class="circleButton">
+                    <img src="https://i.ibb.co/ZHV5PW8/standin2.png" id="taxAvoidanceImg" class="rounded-circle petitionButton"/>
+                    <p><strong>Tax Avoidance</strong></p>
+                </div>
+            </div>
+        </div>
+        @* end of row *@
+
+        <div class="row no-gutters mx-auto">
+            <div class="col-2 offset-md-3 col-xs-offset-3 buttonDiv roundedLeft">
+                <div class="circleButton">
+                    <img src="https://i.ibb.co/ZHV5PW8/standin2.png" id="discriminationImg" class="rounded-circle petitionButton"/>
+                    <p><strong>Discrimination</strong></p>
+                </div>
+            </div>
+            <div class="col-2 buttonDiv">
+                <div class="circleButton">
+                    <img src="https://i.ibb.co/ZHV5PW8/standin2.png" id="employmentImg" class="rounded-circle petitionButton"/>
+                    <p><strong>Employment Practices</strong></p>
+                </div>
+            </div>
+            <div class="col-2 buttonDiv roundedRight">
+                <div class="circleButton">
+                    <img src="https://i.ibb.co/ZHV5PW8/standin2.png" id="environmentalImg" class="rounded-circle petitionButton"/>
+                    <p><strong>Environmental Impact</strong></p>
+                </div>
+            </div>
+        </div>
+        @* end of row *@
+
+        <div class="row no-gutters">
+            <div class="col-2 mx-auto buttonDiv roundedBottom">
+                <div class="circleButton">
+                    <img src="https://i.ibb.co/ZHV5PW8/standin2.png" id="otherImg" class="rounded-circle petitionButton"/>
+                    <p><strong>Other</strong></p>
+                </div>
+            </div>
+        </div>
+        @* end of row *@
+
+        @* Modal for Cause Form *@
+        <div class="modal fade" id="causeFormModal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                    <div class="modal-header title">
+                        <p class="modal-title" id="staticBackdropLabel">Start a new cause!</p>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <label for="category">Category:</label>
+                            <p id="category" class="categoryTitle"></p>
+                            <div class="form-group">
+                                <label for="causeTitle">Cause Title</label>
+                                <input type="text" class="form-control" id="causeTitle" placeholder="Enter a title for your cause" />
+                                <small id="causeTitleError" class="error">Invalid Entry</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="exampleFormControlTextarea1">Cause Description</label>
+                                <textarea class="form-control rounded-0" id="causeDescription" rows="8"></textarea>
+                                <small id="causeDescriptionError" class="error">Invalid Entry</small>
+                            </div>
+                            <label for="memberAction">What would you encourage cause signers to do?</label>
+                            <select class="custom-select custom-select-lg mb-3" id="memberAction">
+                                <option value="1">Boycott Buisiness</option>
+                                <option value="2">Protest</option>
+                                <option value="3">Share Message</option>
+                                <option value="4">Politcially Campaign</option>
+                            </select>
+                            <div class="form-group">
+                                Optional - attach image : <input type='file' name='file' id='imageFile' class='form-control'><br>
+                                <div id='preview'></div>
+                            </div>
+                            <button type="button" class="btn btn-primary" id="submitBtnCause">Submit</button>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeBtn">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @* end of modal *@
+
+        @* modal for cause confirmation *@
+        <div class="modal fade" id="confirmationModal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header title">
+                        <p class="modal-title" id="staticBackdropLabel">Thank you for starting a new Cause!</p>
+                    </div>
+                    <div class="modal-footer">
+                        @Html.ActionLink("See live causes!", "CauseList", "Cause", new { @class = "btn btn-lg" })
+                        <button type="button" class="btn btn-secondary btn-lg" data-dismiss="modal" id="closeBtn">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @* end of modal *@
+    </div>
+    @* end of container *@
+
+</body>

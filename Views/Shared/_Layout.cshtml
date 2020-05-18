@@ -1,0 +1,336 @@
+﻿
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="~/myStylesheet.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="~/Scripts/jquery-3.4.1.js"></script>
+    <script type="text/javascript" src="~/myJavaScript.js"></script>
+    <title>Coursework</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+
+    <script>
+
+        $(document).ready(function () {
+            trackLogIn();//track user between pages
+
+            getUserbase(); //refresh current userbase in case changed
+            getClientUserbase(); //get admin userbase
+
+        });
+
+
+        var userbase = new Array();
+        
+        $(document).on("click", "#submitBtnLogIn", function () {
+            
+            userbase = JSON.parse(localStorage.getItem("userbase")); //get current userbase
+            logInBtnClicked();
+        });
+        var clientUserbase = new Array();
+        $(document).on("click", "#submitBtnClientLogIn", function () {
+            
+            clientUserbase = JSON.parse(localStorage.getItem("clientUserbase")); //set admin userbase
+            clientLogInBtnClicked();
+        });
+
+        function logInBtnClicked() {
+            let logInEmail = $("#logInEmail").val();
+            let logInPass = $("#logInPass").val();
+                $.each(userbase, function (email, pass) {
+                    if (logInEmail === email && logInPass === pass ) { //for each member in current userbase, check if entered details are a match
+                        localStorage.setItem("currentUser", JSON.stringify(email));
+                        localStorage.setItem("loggedIn", JSON.stringify(true));
+                        loggingIn();
+                        window.location.reload(true); //reload current page
+                    } else {
+                        $("#logInError").show();
+                    }
+                });
+        }
+
+        function clientLogInBtnClicked() {
+            let logInEmail = $("#clientLogInEmail").val();
+            let logInPass = $("#clientLogInPass").val();
+                $.each(clientUserbase, function (email, pass) { //same logic but for admin userbase
+                    if (logInEmail === email && logInPass === pass ) {
+                        localStorage.setItem("currentUser", JSON.stringify(email));
+                        localStorage.setItem("loggedIn", JSON.stringify(true));
+                        loggingIn();
+                        window.location.reload(true);
+                    } else {
+                        $("#clientLogInError").show();
+                    }
+                });
+        }
+
+        function getUserbase() {
+            $.ajax({
+                type: "GET",
+                url: "/User/Userbase",
+                success: function (response) {
+                    localStorage.setItem("userbase", JSON.stringify(response)); //set the emails and passwords of current userbase in local storage
+                },
+                error: function () {
+                    alert("error");
+                }
+            });
+        }
+
+        function getClientUserbase() {
+            $.ajax({
+                type: "GET",
+                url: "/User/ClientUserbase",
+                success: function (response) {
+                    localStorage.setItem("clientUserbase", JSON.stringify(response)); //same logic but for admin userbase
+                },
+                error: function () {
+                    alert("error");
+                }
+            });
+        }
+
+       
+        function loggingIn() {
+            //update display
+            $("#logInModal").modal("hide");
+            $("#logInError").hide();
+            $("#logIn").hide();
+
+            $("#clientLogInModal").modal("hide");
+            $("#clientLogInError").hide();
+            $("#clientLogIn").hide();
+
+            $("#welcomeMessage").show();
+            $("#welcomeMessage").css("color", "red");
+            $("#signOut").show();
+            $("#register").hide();
+            $("#welcomeMessage").text("Welcome " + JSON.parse(localStorage.getItem("currentUser"))); //tailor welcome message for current user
+        }
+
+        function trackLogIn() {
+            if (JSON.parse(localStorage.getItem("loggedIn"))) { //check if logged in is stored as true in local storage
+                loggingIn(); //if so trigger log in visibility change
+                $("#signOut").show();
+                if (trackAdmin()) {
+                    adminVisibility(); //apply same logic but for tailored admin view if admin logged in
+                }
+            } else {
+                $("#signOut").hide();
+            }
+        }
+
+        function trackAdmin() {
+            let client = JSON.parse(localStorage.getItem("currentUser"));
+            clientUserbase = JSON.parse(localStorage.getItem("clientUserbase"));
+            let isClient = false;
+                $.each(clientUserbase, function (email, pass) { //checks if logged in user is an admin to update visibility
+                    if (client === email) {
+                        isClient = true;
+                    } 
+                });
+            return isClient;
+        }
+
+        function adminVisibility(){
+            $("#startCauseNav").hide();
+            $("#joinCauseBtn").hide();
+            $("#deleteBtn").show();
+            $("#startCauseIndex").hide();
+        }
+
+        $(document).on("click", "#signOut", function () {
+            localStorage.clear(); //clear local storage on log out
+            window.location.reload(true);
+        });
+    </script>
+   
+</head>
+<body class="noMargin">
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v6.0"></script>
+    @* Modal for login *@
+    <div class="modal fade" id="logInModal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header title">
+                    <p class="modal-title" id="staticBackdropLabel">Existing Member Log In <br /><strong> Please sign in to create and join causes</strong></p>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="logInEmail">Email address</label>
+                            <input type="email" class="form-control" id="logInEmail" aria-describedby="emailHelp" placeholder="Enter email">
+                        </div>
+                        <div class="form-group">
+                            <label for="logInPass">Password</label>
+                            <input type="password" class="form-control" id="logInPass" placeholder="Password">
+                            <small class="error" id="logInError">The details entered do not match our records</small>
+                        </div>
+                        <button type="button" class="btn btn-primary" id="submitBtnLogIn">Log In</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeBtnLogIn">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @* end of modal *@
+
+    @* Modal for client login *@
+    <div class="modal fade" id="clientLogInModal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header title">
+                    <p class="modal-title" id="staticBackdropLabel">Administrator Log In <br /><strong> Please sign in for administrator privileges </strong></p>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="logInEmail">Email address</label>
+                            <input type="email" class="form-control" id="clientLogInEmail" aria-describedby="emailHelp" placeholder="Enter email">
+                        </div>
+                        <div class="form-group">
+                            <label for="logInPass">Password</label>
+                            <input type="password" class="form-control" id="clientLogInPass" placeholder="Password">
+                            <small class="error" id="clientLogInError">The details entered do not match our records</small>
+                        </div>
+                        <button type="button" class="btn btn-primary" id="submitBtnClientLogIn">Log In</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeBtnLogIn">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @* end of modal *@
+
+
+    @* Modal for registration *@
+    <div class="modal fade" id="registerModal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header title">
+                    <p class="modal-title" id="staticBackdropLabel">New Member Registration</p>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="firstName">First name</label>
+                            <input type="text" class="form-control" id="firstName" placeholder="Enter first name" />
+                            <small id="firstNameError" class="error">Invalid Entry</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="firstName">Last name</label>
+                            <input type="text" class="form-control" id="lastName" placeholder="Enter last name" />
+                            <small id="lastNameError" class="error">Invalid Entry</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="registrationEmail">Email address</label>
+                            <input type="email" class="form-control" id="registrationEmail" aria-describedby="emailHelp" placeholder="Enter email">
+                            <small id="emailError" class="error">Invalid Entry</small>
+                            <small id="alreadRegisteredError" class="error">Email already registered</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="registrationPass">Password</label>
+                            <input type="password" class="form-control" id="registrationPass" placeholder="Password">
+                            <small id="passError" class="error">Invalid Entry</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="registrationPass2">Confirm Password</label>
+                            <input type="password" class="form-control" id="registrationPass2" placeholder="Confirm Password">
+                            <small id="passError2" class="error">Invalid Entry</small>
+                        </div>
+                        <div class="form-group form-check">
+                            <input type="checkbox" class="form-check-input" id="checkbox" />
+                            <label class="form-check-label" for="checkbox">&nbsp &nbsp I have read and agree to PetitionPlus' <a href="#">Terms and Conditions</a></label>
+                            <small id="checkboxError" class="error">Invalid Entry</small>
+                        </div>
+                        <button type="button" class="btn btn-primary" id="submitBtnRegister">Submit</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeBtnRegister">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @* end of manga *@
+
+
+    @* modal to confirm registration *@
+    <div class="modal fade" id="registrationConfirmationModal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header title">
+                    <p class="modal-title" id="staticBackdropLabel">Thank you for registering!</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeBtn">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @* end of modal *@
+
+
+    @* Start of Navbar *@
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="" id="navBarHeader"><p><strong class="mainHeaderStart">Petition<b id="headerBold">PLUS</b></strong></p></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    @Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })
+                </li>
+                <li class="nav-item">
+                    @Html.ActionLink("Active Causes", "CauseList", "Cause", new { area = "" }, new { @class = "nav-link" })
+                </li>
+                <li id="startCauseNav" class="nav-item active">
+                    @Html.ActionLink("Start a Cause!", "Cause", "Cause", new { area = "" }, new { @class = "nav-link" })
+                </li>
+            </ul>
+            <ul class="navbar-nav pull-right">
+                <li class="nav-item">
+                    <a class="nav-link causeLink danger" href="#" id="welcomeMessage">Welcome</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link causeLink" href="#" id="clientLogIn" data-toggle="modal" data-target="#clientLogInModal">Admin Log In</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link causeLink" href="#" id="logIn" data-toggle="modal" data-target="#logInModal">Log In</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link causeLink" href="#" id="signOut">Sign Out</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link causeLink" href="#" id="register" data-toggle="modal" data-target="#registerModal">Register!</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    @* end of navbar *@
+
+    @RenderBody()
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    <!-- Latest compiled and minified JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+</body>
+</html>

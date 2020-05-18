@@ -1,0 +1,67 @@
+﻿@model List<Final_Coursework___40091970.Models.Cause>
+
+@{
+    ViewBag.Title = "CauseConfirmation";
+}
+
+<h2>CauseConfirmation </h2>
+
+@* this page is used for testing cause objects have been stored correctly *@
+
+<table width="500">
+    <tr><th>Id</th><th>Title</th><th>Description</th><th>Cause Owner</th><th>Cause Owner Email</th><th>Signatures</th><th>Action</th><th>Category</th><th>Image</th></tr>
+    @foreach (var c in Model)
+    {
+        <tr>
+            <td>@c.Id</td>
+            <td>@c.Title</td>
+            <td>@c.Description</td>
+            <td>@c.CauseOwner.FirstName @c.CauseOwner.LastName</td>
+            <td>@c.CauseOwner.Email</td>
+            <td>@c.Signatures.Count()</td>
+            <td>@c.Action</td>
+            <td>@c.Category</td>
+        </tr>
+    }
+</table>
+
+
+@foreach (var c in Model)
+{
+    <table width="500">
+        <tr><th>Cause: @c.Title, sig ID  </th><th>Signers</th><th>Title of first cause in Signers signatures</th>Last one</tr>
+        @foreach (var sig in c.Signatures)
+        {
+            <tr>
+                <td>@sig.Id</td>
+                <td>@sig.Signer.Email</td>
+                <td>@sig.TheCause.Title</td>
+                <td>@sig.Signer.Signatures.Count()</td>
+                <td>@sig.Signer.Signatures.First().TheCause.Title</td>
+                <td>@sig.Signer.Signatures.Last().TheCause.Title</td>
+            </tr>
+        }
+
+    </table>
+}
+
+
+
+<table width="500">
+    <tr><th>Id</th><th>Title</th><th>Description</th><th>Cause Owner</th><th>first signer email</th><th>first signer signs total</th><th>title of first cause in first signers signatures</th></tr>
+    @foreach (var c in Model)
+    {
+        <tr>
+            <td>@c.Id</td>
+            <td>@c.Title</td>
+            <td>@c.Description</td>
+            <td>@c.CauseOwner.FirstName @c.CauseOwner.LastName</td>
+            <td>@c.Signatures.Count()</td>
+            @*<td>@c.Signatures.ToList().First().Signer.FirstName</td>*@
+            @*<td>@c.Signatures.First().Signer.Signatures.First().TheCause.Title</td>*@
+
+        </tr>
+    }
+</table>
+
+

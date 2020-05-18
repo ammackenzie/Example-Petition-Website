@@ -1,0 +1,336 @@
+﻿@model Final_Coursework___40091970.Models.Cause
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<script>
+    $(document).ready(function () {
+        //tailor view
+        $("#causeID").hide();
+        $("#ownerMessage").hide();
+
+
+        //dynamically update value of social media share button
+        var url = window.location.href;
+        $("#shareBtn").attr("data-href", url);
+        
+        //save current sigs to local storage
+        saveSigEmails();
+
+        //check if user has already signed current cause
+        if (JSON.parse(localStorage.getItem("loggedIn")) && alreadySignedCause()) {
+
+            $("#joinCauseBtn").hide();
+            $("#thankYouMessage").show();
+        }
+
+        //check if user is owner of current cause
+        if (JSON.parse(localStorage.getItem("loggedIn")) && checkCauseOwner()) {
+
+            $("#joinCauseBtn").hide();
+            $("#ownerMessage").show();
+        }
+
+        setInterval(passiveUpdate, 4000); //live refresh for cause signatures
+    });
+
+ 
+
+    //****JOIN CAUSE BUTTON CLICK****
+    $(document).on("click", "#joinCauseBtn", function () {
+
+        if (JSON.parse(localStorage.getItem("loggedIn"))) {
+            if (alreadySignedCause()) {
+                //do nothing - should never occur but placed here for safety
+            } else {
+                signCause();
+            }
+            
+            
+        } else {
+            $("#logInModal").modal("toggle");
+        }
+    });
+
+    
+    function saveSigEmails() {
+        let target = parseInt($("#causeID").text()); //find id of target cause
+        $.ajax({
+            url: "/Cause/CheckSigners",
+            data: { "id": target },
+            success: function (data) {
+                localStorage.setItem("sigEmails", JSON.stringify(data)); //set emails of signers in local storage
+            },
+            error: function () {
+                alert("errorsigned");
+            }
+        });
+    }    
+
+    function alreadySignedCause() {
+        let current = JSON.parse(localStorage.getItem("currentUser"));
+        let target = parseInt($("#causeID").text());
+        let output = false;
+        $.ajax({
+            url: "/Cause/CheckSigners",
+            data: { "id": target },
+            async: false,
+            success: function (data) {
+
+                $.each(data, function (index, value) {
+                    if (current === value) {
+                        output = true;
+                        return output; //check if current user's email is found in list of current signers
+                    }
+                });
+            },
+            error: function () {
+                alert("errorsigned");
+            }
+        });
+       return output;
+    }
+
+
+    function checkCauseOwner() {
+        let current = JSON.parse(localStorage.getItem("currentUser"));
+        let target = parseInt($("#causeID").text());
+        let output = false;
+        $.ajax({
+            url: "/Cause/CheckOwner",
+            data: { "id": target },
+            async: false,
+            success: function (data) {
+                if (current === data) {
+                    output = true; //check if current user is the owner of current cause
+                }
+                
+            },
+            error: function () {
+                alert("errorowner");
+            }
+        });
+       return output;
+    }
+
+
+
+    function signCause() {
+        //save current cause id and current member email
+        var targetID = $("#causeID").text();
+        var member = new Object();
+        member.email = JSON.parse(localStorage.getItem("currentUser"));
+        var cause = new Object();
+        cause.Id = targetID;
+        cause.causeOwner = member;
+        
+        var json = JSON.stringify(cause);
+        $.ajax({
+            type: "POST",
+            url: "/Cause/SignCause",
+            data: json,
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                updateSigs(); //now update display of signatures
+            },
+            error: function () {
+                alert("post error");
+            }
+        });
+
+        $("#joinCauseBtn").hide();
+        $("#thankYouMessage").show(); //tailor view
+    }
+
+    function passiveUpdate() {
+        var target = parseInt($("#causeID").text());
+        var newCount = 0;
+        $.ajax({
+            url: "/Cause/GetSignatures",
+            data: { "id" : target},
+            success: function (data) {
+                $("#sigTable").empty();
+                $.each(data, function (index, name) {
+                    $("#sigTable").append(
+                        "<tr> <td>" + data[index] + "</td> </tr>"
+                    ) //amend table of current signatures
+                    newCount += 1;
+                });
+            
+                $("#countOfCause").text(newCount); //update signature counter
+            },
+            error: function () {
+                alert("error2");
+            }
+        });
+
+        if (alreadySignedCause()) {
+            $("#joinCauseBtn").hide();
+            $("#thankYouMessage").show();
+        } //update display if user has already signed cause
+    }
+
+
+    function deleteCause() {
+        var target = parseInt($("#causeID").text());
+
+        $.ajax({
+            url: "/Cause/DeleteCause",
+            data: { "id": target },
+            async: false,
+            success: function () {
+            },
+            error: function () {
+            }
+        });
+
+        var url = '@Url.Action("CauseList", "Cause")';
+
+        window.location.href = url;
+
+    }
+
+    function updateSigs() {
+        var target = parseInt($("#causeID").text());
+        var newCount = 0;
+        $.ajax({
+            url: "/Cause/GetSignatures",
+            data: { "id" : target},
+            success: function (data) {
+                $("#sigTable").empty();
+                $.each(data, function (index, name) {
+                    $("#sigTable").append(
+                        "<tr> <td>" + data[index] + "</td> </tr>"
+                    ) //update displayed signatures
+                    newCount += 1;
+                });
+            
+                $("#countOfCause").text(newCount); //update signature count
+            },
+            error: function () {
+                alert("error2");
+            }
+        });
+
+    }
+
+    $(document).on("click", "#deleteCauseBtn", function () {
+        if (trackAdmin()) {//extra security - should never happen
+            deleteCause();
+        }
+    });
+
+</script>
+
+<body class="causePageBody">
+
+    @* background image *@
+    <div class="causePageBackgroundImg">
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-8 mx-auto mb-2">
+                <div class="mainHeader">
+                    <p class="text-danger"><strong>Cause</strong></p>
+                </div>
+            </div>
+        </div>
+        @* end of row *@
+        <div class="row">
+            <div class="col-xs-9 mx-auto mb-4">
+                <div class="largerText">
+                    <p id="causeID">@Model.Id</p>
+                    <p id="titleOfCause" class="text-center bold">@Model.Title</p>
+                    <p id="categoryOfCause" class="text-center">@Model.Category</p>
+                </div>
+            </div>
+        </div>
+        @* end of row *@
+        <div class="row">
+            <div class="col-xs-8">
+                <div class="row">
+                    <div class="col-xs-12 largeText">
+                        <p class="italic" id="memberOfCause">Cause Owner: @Model.CauseOwner.FirstName @Model.CauseOwner.LastName </p>
+                        <p id="descriptionOfCause">@Model.Description</p>
+                    </div>
+                </div>
+                @* end of row *@
+                <div class="row">
+                    <div class="col-md-12 text-center largeText">
+                        <p>This cause encourages signers to: <strong id="actionOfCause">@Model.Action</strong></p>
+                    </div>
+                </div>
+                @* end of row *@
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <button type="button" class="btn btn-lg text-center mb-4" id="joinCauseBtn">Join the Cause!</button>
+                        <button type="button" class="btn btn-lg text-center mb-4" id="deleteBtn" data-toggle="modal" data-target="#deleteConfirmationModal">Delete Cause</button>
+                        @*@Html.ActionLink("Delete Cause", "CauseList", "Cause", new { area = "" }, new { @class = "nav-link btn btn-lg text-center mb-4", id = "deleteCauseBtn" })*@
+                    </div>
+                </div>
+                @* end of row *@
+            </div>
+            <div class="col-xs-4">
+                <div>
+                    @*<img src="" class="img-fluid causeImg img-rounded" alt="@Model.Image" />*@
+                    <img src="https://i.ibb.co/ZHV5PW8/standin2.png" class="img-fluid img-rounded" />
+                </div>
+            </div>
+        </div>
+        @* end of row *@
+        <div class="row">
+            <div class="col-xs-4 offset-xs-2 offset-md-2">
+                <div class="largeText text-center" id="signatureCount">
+                    <p id="thankYouMessage">Thank you for joining the cause!</p>
+                    <p id="ownerMessage">You are the owner of this cause.</p>
+                    <div class="fb-share-button" data-href="" data-layout="button" data-size="small"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Flocalhost%3A44374%2FHome%2FIndex&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
+                    <div>
+                        <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false">Tweet</a>
+                        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @* end of row *@
+        <div class="row">
+            <div class="col-xs-6 offset-xs-6 offset-md-6 shadow-lg p-3 mt-5 bg-white roundedExtra">
+                <div class="largeText" id="membersSigned">
+                    <p>Member signatures so far: <strong id="countOfCause">@Model.Signatures.Count()</strong></p>
+                    <p><strong>Signers</strong></p>
+                    <table id="sigTable" width="500">
+                        @foreach (var s in Model.Signatures)
+                        {
+                            <tr>
+                                <td>@s.Signer.FirstName @s.Signer.LastName </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+        @* end of row *@
+
+        @* Modal for confirm delete *@
+        <div class="modal fade" id="deleteConfirmationModal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header title">
+                        <p class="modal-title" id="staticBackdropLabel">Are you sure you wish to delete this cause?</p>
+                    </div>
+                    <div class="modal-body">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="deleteCauseBtn">Delete</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeBtn">Cancel</button>
+                    </div>
+                    <div class="modal-footer">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        @* end of modal *@
+    </div>
+    @* end of container *@
+</body>

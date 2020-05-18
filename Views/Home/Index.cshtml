@@ -1,0 +1,103 @@
+﻿@model Final_Coursework___40091970.Models.Cause
+
+<body class="indexBody">
+    <div class="indexBackgroundImg">
+    </div>
+    <div class="container bodyContent">
+        <div class="row">
+            <div class="col-xs-8 mx-auto">
+                <div class="mainHeader">
+                    <p><strong>Petition<b id="headerBold">PLUS</b></strong></p>
+                </div>
+            </div>
+            @* end of header *@
+        </div>
+        @* end of row *@
+
+        <div class="row">
+            <div class="col-xs-9 mx-auto mtNeg">
+                <div class="subheader text-center">
+                    <h1><strong>Start a petition against unfair practices today</strong></h1>
+                </div>
+            </div>
+        </div>
+        @* end of row *@
+
+        <div class="row">
+            <div class="col-xs-9 mx-auto text-center mtNeg">
+                <h3><strong>PetitionPlus provides a platform for user-generated causes against unfair employment practices, discrimination, tax avoidance and more.</strong></h3>
+                <span class="h3"><strong>Start a cause today that all </strong></span><span class="LogoEditedGrey"><strong>Petition</strong></span><span class="LogoEditedRed"><strong>PLUS</strong></></span><span class="h3"><strong> members can sign, share and support!</strong></span>
+            </div>
+        </div>
+        @* end of row *@
+
+        <div class="row mb-4">
+            <div id="startCauseIndex"class="col-xs-12 text-center">
+                @Html.ActionLink("Start a Cause!", "Cause", "Cause", new { area = "" }, new { @class = "nav-link btn btn-lg text-center mb-4" })
+            </div>
+        </div>
+        @* end of row *@
+
+        <div class="row">
+            <div class="col-xs-9 mx-auto shadow-lg p-3 mb-5 bg-white roundedExtra">
+                <div class="row">
+                    <div class="col-xs-3 border-secondary border-right roundedExtra">
+                        <div class="row no-gutters">
+                            <div class="col-xs-12 no-gutters">
+                                <p class="mainHeaderStart" id="spotlightp">Spotlight</p>
+                            </div>
+                        </div>
+                        @* end of row *@
+                        <div class="row no-gutters">
+                            <div class="col-xs-10 mx-auto">
+                                <img src="https://i.ibb.co/3k4PGn4/fists.png" class="img-fluid" />
+                            </div>
+                        </div>
+                        @* end of row *@
+                        <div class="row no-gutters">
+                            <div class="col-xs-12">
+                                <p class="mainHeaderEnd" id="spotlightp">Cause</p>
+                            </div>
+                        </div>
+                        @* end of row *@
+                    </div>
+
+                    <div class="col-xs-6 border-danger border-left roundedExtra">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <h3><strong>@Model.Title</strong></h3>
+                            </div>
+                        </div>
+                        @* end of row *@
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <p class="clDescription">@Model.Description</p>
+                            </div>
+                        </div>
+                        @* end of row *@
+
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                @Html.ActionLink("Cause Page!", "CausePage", "Cause", new { id = Model.Id }, new { @class = "btn btn-lg mb-4" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <p class="largeText">Signatures so far: <strong>@Model.Signatures.Count()</strong></p>
+                            </div>
+                        </div>
+                        @* end of row *@
+                    </div>
+
+                    <div class="col-xs-3">
+                        <img src="https://i.ibb.co/RTHXwrJ/pollution-long.jpg" class="img-fluid img-rounded" />
+                    </div>
+                </div>
+                @* end of row *@
+            </div>
+            @* end of main column *@
+        </div>
+        @* end of row *@
+    </div>
+    @* end of container *@
+</body>

@@ -1,0 +1,339 @@
+﻿.noMargin {
+    margin: 0px;
+    padding: 0px;
+}
+
+#header h1 {
+    margin: 0px;
+}
+
+.bodyContent {
+    font-family: 'Open Sans', sans-serif;
+}
+
+.mainHeaderStart {
+    color: darkgrey;
+}
+
+.mainHeaderEnd {
+    color: red;
+}
+
+.mainHeader {
+    text-align: center;
+    color: darkgrey;
+    font-size: 36px;
+}
+
+#mainlogo {
+    text-align: center;
+    color: darkgrey;
+    font-size: large;
+}
+
+.largerText {
+    font-size: x-large;
+}
+
+.largeText {
+    font-size: larger;
+}
+
+
+.LogoEditedGrey {
+    font-size: 1.65em;
+    font-weight: bold;
+    color: darkgrey;
+}
+
+.LogoEditedRed {
+    font-size: 1.65em;
+    font-weight: bold;
+    color: red;
+}
+
+
+#headerBold {
+    color: red;
+}
+
+.subheader {
+    margin-bottom: 20px;
+    font-size: larger;
+}
+
+.slideImage {
+    opacity: 0.8;
+}
+
+
+#members {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.buttonDiv {
+    background-color: rgb(255, 77, 77, 0.7);
+}
+
+.petitionButton {
+    height: 70%;
+    width: 70%;
+    text-align: center;
+}
+
+
+    .petitionButton:hover {
+        border: solid white;
+    }
+
+#topButton {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.buttonText {
+    text-align: center;
+}
+
+/*cause buttons*/
+.circleButton {
+    text-align: center;
+    margin-top: 10px;
+    color: white;
+}
+
+.roundedTop {
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+}
+
+.roundedLeft {
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 25px;
+}
+
+.roundedBottom {
+    border-bottom-left-radius: 25px;
+    border-bottom-right-radius: 25px;
+}
+
+.roundedRight {
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+}
+
+
+/* button override*/
+.btn {
+    margin: 20px;
+    color: silver;
+    background-color: red;
+}
+
+#middleButton {
+    text-align: center;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.bottomButton {
+    text-align: center;
+}
+
+/*nav bar override*/
+.navbar {
+    font-size: large;
+    padding: 0px;
+    margin: 0px;
+}
+
+.form-control {
+    min-width: 100%
+}
+
+.causeLink:hover {
+    font-size: 102%;
+    color: red;
+    opacity: 0.8;
+}
+
+
+/*main page border div*/
+
+.mainBox {
+    margin-top: 30px;
+}
+
+/*class for negative margin*/
+.mtNeg {
+    margin-top: -2rem !important;
+}
+/*div for responsive img*/
+
+/*rounding borders*/
+.roundedExtra {
+    border-radius: 1rem;
+}
+
+
+#spotlightp {
+    font-size: x-large;
+    text-align: center;
+}
+
+.spotlightBorder {
+    border-width: thick;
+}
+
+.button {
+    color: darkgrey;
+}
+
+.title {
+    font-size: larger;
+    text-align: center;
+}
+
+
+/* Error text*/
+.error {
+    color: red;
+    font-weight: bold;
+}
+
+.causeBody {
+    background-color: silver;
+    margin: 0px;
+    padding: 0px;
+}
+
+.causeText {
+    color: white;
+}
+
+
+.causeHeader {
+    margin-top: 20px;
+    color: red;
+    font-size: xx-large;
+    opacity: 0.8;
+}
+
+.causeDescription {
+    margin-bottom: 20px;
+}
+
+.backgroundImg {
+    background-image: url("https://i.ibb.co/Hr6b8c0/minimalist-Map.jpg");
+    position: absolute;
+    opacity: 0.5;
+    height: 100%;
+    width: 100%;
+    margin-top: -2rem !important;
+    box-shadow: 0 0 500px 50px lightgray inset;
+    background-color: darkgray;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+.indexBackgroundImg {
+    background-image: url("https://i.ibb.co/w6sG8Zw/index-Background1.jpg");
+    position: absolute;
+    opacity: 0.5;
+    height: 100%;
+    width: 100%;
+    margin-top: -2rem !important;
+    box-shadow: 0 0 500px 50px white inset;
+    background-color: white;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+.causePageBackgroundImg {
+    background-image: url("https://i.ibb.co/Y7gkD01/index-Background2.jpg");
+    position: absolute;
+    opacity: 0.5;
+    height: 140%;
+    width: 120%;
+    margin-top: -2rem !important;
+    box-shadow: 0 0 500px 50px white inset;
+    background-color: white;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+.indexBody {
+    background-color: whitesmoke;
+    margin: 0px;
+    padding: 0px;
+}
+
+.causePageBody {
+    background-color: white;
+    margin: 0px;
+    padding: 0px;
+}
+
+.categoryTitle {
+    font-weight: bold;
+}
+
+/*cause Page*/
+
+#signatureCount {
+    color: red;
+    border: solid gray;
+    padding-top: 10px;
+    margin-top: 10px;
+    border-radius: 10%;
+    background-color: rgb(170, 177, 189, 0.7);
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.italic {
+    font-style: italic;
+}
+
+.causeImg {
+    height: 450px;
+}
+
+.otherCauses {
+    margin-top: 100px;
+    border-top: solid red;
+    border-radius: 1%;
+}
+
+
+
+
+/*ACTIVE CAUSES STYLING*/
+.clTitle{
+    font-size: larger;
+    font-weight: bold;
+}
+
+.clDescription {
+    width: 100%;
+    overflow: auto;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.clShort {
+    width: 100%;
+}
+
+.searchBar {
+    margin-bottom: 15px;
+    padding: 10px;
+}
+
+

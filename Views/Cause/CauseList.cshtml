@@ -1,0 +1,107 @@
+﻿@model IEnumerable<Final_Coursework___40091970.Models.Cause>
+
+@{
+    ViewBag.Title = "CauseList";
+}
+
+
+<script>
+    $(document).on("click", "#searchButton", function () {
+        //logic for basic search bar, removes spaces from search string and checks if it matches an id of a listed cause as initialised below
+        let searchTitle = $("#searchBar").val().toLowerCase().replace(/\s/g, '');
+        if (searchTitle.length > 0) {
+            $(".causeItem").hide();
+            $("#" + searchTitle).show();
+        }
+    });
+
+</script>
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-10 mx-auto">
+            <div class="row no-gutters">
+                <div class="col-xs-5 mx-auto">
+                    <h2 class=" = mainHeader">Active Causes</h2>
+                </div>
+            </div>
+            @* end of row *@
+            <div class="row no-gutters">
+                <div class="col-xs-8 mx-auto">
+                    <label for="causeTitle">Search Causes</label>
+                    <input type="text" id="searchBar" class="form-control searchBar" placeholder="Enter title..." />
+                </div>
+                <div class="col-xs-1">
+                    <button type="button" class="btn btn-secondary" id="searchButton">Search</button>
+                </div>
+            </div>
+            @* end of row *@
+            @foreach (var item in Model)
+            {
+                <div class="row causeItem" id="@item.Title.ToLower().Replace(" ", "")"> @* remove spaces from title and set as id for search purposes *@
+                    <div class="col-xs-9 mx-auto shadow-lg p-3 mb-5 bg-white roundedExtra">
+                        <div class="row">
+                            <div class="col-xs-3 border-secondary border-right roundedExtra">
+                                <div class="row no-gutters">
+                                    <div class="col-xs-10 mx-auto">
+                                        <img src="https://i.ibb.co/3k4PGn4/fists.png" class="img-fluid" />
+                                    </div>
+                                </div>
+                                @* end of row *@
+                            </div>
+                            <div class="col-xs-6 border-danger border-left roundedExtra">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <h3 id="causeTitle"><strong>@item.Title</strong></h3>
+                                    </div>
+                                </div>
+                                @* end of row *@
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <p class="clDescription">@item.Description</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <p class="clDescription">Category: <strong>@item.Category</strong></p>
+                                    </div>
+                                </div>
+                                @* end of row*@
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <p class="clDescription">Action: <strong>@item.Action</strong></p>
+                                    </div>
+                                </div>
+                                @* end of row *@
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <p class="largeText">Signatures so far: <strong>@item.Signatures.Count()</strong></p>
+                                    </div>
+                                </div>
+                                @* end of row *@
+                                <div class="row">
+                                    <div class="col-md-12 text-center">
+                                        @Html.ActionLink("View Cause!", "CausePage", "Cause", new { id = item.Id }, new { @class = "btn btn-md mb-4" })
+                                    </div>
+                                </div>
+                                @* end of row *@
+                            </div>
+                            @* end of column *@
+                            <div class="col-xs-3">
+                                @* end of stock image *@
+                                <img src="https://i.ibb.co/ZHV5PW8/standin2.png" class="img-fluid img-rounded" />    
+                            </div>
+                        </div>
+                        @* end of row *@
+                    </div>
+                    @* end of main column *@
+                </div>
+                @* end of row *@
+            }
+            @* end of cause list entry *@
+        </div>
+        @* enf of column *@
+    </div>
+    @* end of row *@
+</div>
+@* end of container *@
