@@ -1,5 +1,5 @@
 
-# ExamplePetitionWebsite
+# Example Petition Website
 Functioning Website for cause/petition creation/sharing. Built in Visual Studio with ASP.NET MVC.
 
 Dynamic functioning website for cause/petition creation. 
